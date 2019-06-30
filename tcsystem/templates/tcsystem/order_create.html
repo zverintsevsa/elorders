@@ -1,0 +1,137 @@
+{% extends "tcsystem/body.html" %}
+{% load mptt_tags %}
+{% load static %}
+
+{% load crispy_forms_tags %}
+{% block extra_links %}
+
+	<link rel="stylesheet" href="{% static 'tcsystem/fontawesome/css/all.min.css' %}">
+	<link rel="stylesheet" href="{% static 'tcsystem/hummingbird-treeview.css' %}">
+	<script src="{% static 'tcsystem/jquery.js' %}"></script>
+	<script src="{% static 'tcsystem/hummingbird-treeview.js' %}"></script>
+
+{% endblock %}
+
+{% block title %}Новое распоряжение{% endblock %}
+
+{% block content %}
+<form action="{% url 'tcsystem:order-create' %}" method="post">
+    {% csrf_token %}
+    <div class="row">
+
+    	<div class="col-9">
+    		<h4>Новое распоряжение</h4>   		
+    	</div>
+
+	    <div class="col-3 d-flex justify-content-end">
+			<button class="btn btn-success btn-sm text-right" type="submit">Сохранить</button>
+		</div>
+    	
+    </div>
+    <div class="row">
+    	<div class="col-8">
+   			{{ form.title|as_crispy_field }}      		
+    	</div>
+    	<div class="col-4">
+   			{{ form.number|as_crispy_field }} 
+    		
+    	</div>
+    	
+    </div>
+
+    {{ form.text|as_crispy_field }}
+
+	<h5>Получатели</h5>
+    <div class="row">
+		<div class="col-8">
+			<div class="card">
+				<div class="card-body">
+					<h6 class="card-title">Пользователи</h6>
+				    <ul id="treeview-1" type="none">
+					    {% recursetree groups %}
+					        <li><i class="fa fa-plus"></i>
+					            <label><input  id="xnode-1-0-1" data-id="custom-1-0-1" type="checkbox" />{{ node.title }}</label>  
+					            <ul class="list-unstyled">
+					                {% for member in node.members.all %}
+					                <li><small><input type="checkbox" name="check_users" value="{{ member.id }}"/>{{ member.userprofile }}</small></li>
+					                {% endfor %}
+					            </ul>
+					            {% if not node.is_leaf_node %}
+					                <ul class="children" type="none">
+					                    {{ children }}
+					                </ul>            
+					            {% endif %}
+					        </li>
+					    {% endrecursetree %}
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-4">
+			<div class="card">
+				<div class="card-body">
+					<h6 class="card-title">Группы</h6>
+					<ul class="list-unstyled">
+						{% for group in personal_groups %}
+						<li><small><input type="checkbox" name="check_groups" value="{{ group.id }}"/>{{ group.title }}</small></li>
+						{% endfor %}
+					</ul>		
+				</div>
+			</div>
+
+		</div>
+	</div>
+<br>
+<h5>Подписанты</h5>
+    <div class="row">
+		<div class="col-8">
+			<div class="card">
+				<div class="card-body">
+					<h6 class="card-title">Пользователи</h6>
+				    <ul id="treeview-2" type="none">
+					    {% recursetree groups %}
+					        <li><i class="fa fa-plus"></i>
+					        	<label><input  id="xnode-2-0-1" data-id="custom-2-0-1" type="checkbox" />{{ node.title }}</label>  
+
+					            <ul class="list-unstyled">
+					                {% for member in node.members.all %}
+					                <li><small><input type="checkbox" name="check_susers" value="{{ member.id }}"/>{{ member.userprofile }}</small></li>
+					                {% endfor %}
+					            </ul>
+
+					            {% if not node.is_leaf_node %}
+					                <ul class="children" type="none">
+					                    {{ children }}
+					                </ul>            
+					            {% endif %}
+					        </li>
+					    {% endrecursetree %}
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-4">
+			<div class="card">
+				<div class="card-body">
+					<h6 class="card-title">Группы</h6>
+					<ul class="list-unstyled">
+						{% for group in personal_groups %}
+						<li><small><input type="checkbox" name="check_sgroups" value="{{ group.id }}"/>{{ group.title }}</small></li>
+						{% endfor %}
+					</ul>		
+				</div>
+			</div>
+
+		</div>
+	</div>
+</form>
+
+<script type="text/javascript">
+	$("#treeview-1").hummingbird();
+	$("#treeview-1").hummingbird("collapseAll");
+    $("#treeview-2").hummingbird();
+    $("#treeview-2").hummingbird("collapseAll");
+</script>
+{% endblock %}

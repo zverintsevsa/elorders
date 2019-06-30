@@ -1,0 +1,27 @@
+{% extends "tcsystem/body.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Сообщения{% endblock %}
+
+{% block content %}
+
+<h4>{% if chat.first_user == request.user %}{{ chat.second_user.userprofile }}
+        {% else %}{{ chat.first_user.userprofile }}{% endif %}</h4>
+
+
+{% if message_list %}
+<hr>
+{% for message in message_list %}
+    <dl class = "dl-horizontal">
+        <dt>{{ message.sender.userprofile}} <small>{{ message.date|date:'d-b H:i' }}</small></dt>
+        <dd>{{ message.text }}</dd>
+    </dl>
+{% endfor %}
+{% endif %}
+
+<form action="{% url 'tcsystem:chat' view.kwargs.pk %}" method="post">
+	{% csrf_token %}
+	{{ form.text|as_crispy_field }}
+	<button class="btn btn-success btn-sm" type="submit">Отправить</button>
+</form>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "tcsystem/body.html" %}
+
+{% block title %}Пользователи{% endblock %}
+
+{% block content %}
+
+<h4>{{ user.userprofile }}</h4>
+<hr>
+<dl class="row">
+    <dt class="col-3">Фамилия</dt>
+    <dd class="col-9">{{ user.last_name }}</dd>
+</dl>
+
+<dl class="row">
+    <dt class="col-3">Имя</dt>
+    <dd class="col-9">{{ user.first_name }}</dd>
+</dl>
+
+<dl class="row">
+    <dt class="col-3">Отчество</dt>
+    <dd class="col-9">{{ user.userprofile.middle_name }}</dd>
+</dl>
+
+<dl class="row">
+    <dt class="col-3">Должность</dt>
+    <dd class="col-9">{{ user.userprofile.possition }}</dd>
+</dl>
+
+<dl class="row">
+    <dt class="col-3">Последний вход</dt>
+    <dd class="col-9">{{ user.last_login }}</dd>
+</dl>
+
+<dl class = "dl-horizontal">
+    <dt>О пользователе</dt>
+    <dd>{{ user.userprofile.about }}</dd>
+</dl>
+
+{% if user == request.user %}
+<a href="{% url 'tcsystem:passwordchange' request.user.id %}">Сменить пароль</a>
+{% else %}
+<form action="{% url 'tcsystem:open-chat' view.kwargs.pk %}" method="post">
+    {% csrf_token %}
+    <button class="btn btn-primary btn-sm" type="submit">Написать сообщение</button>
+</form>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "tcsystem/body.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Комментарии{% endblock %}
+
+{% block content %}
+
+<h5>Комментарий</h5>
+<form action="{% url 'tcsystem:comment-create' view.kwargs.pk %}" method="post">
+    {% csrf_token %}
+    {{ form.text|as_crispy_field }}
+    <button class="btn btn-success btn-sm" type="submit">Отправить</button>
+</form>
+{% endblock %}

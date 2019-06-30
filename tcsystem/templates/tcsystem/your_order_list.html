@@ -1,0 +1,48 @@
+{% extends "tcsystem/body.html" %}
+
+{% block title %}Ваши распоряжения{% endblock %}
+
+{% block content %}
+<nav class="nav nav-tabs justify-content">
+    <a class="nav-link active" href="{% url 'tcsystem:your-orders' %}">Отправленные</a>
+    <a class="nav-link" href="{% url 'tcsystem:for-you-orders' %}">Полученные</a>
+    <a class="nav-link" href="{% url 'tcsystem:for-signing-orders' %}">На подпись</a>
+</nav>
+{% if order_list %}
+	<h5>Ваши распоряжения</h5>
+    <table class="table table-sm">
+        <thead class="thead-light">
+            <tr>
+                <th>Название</th>
+                <th>Автор</th>
+                <th>Статус</th>
+                <th>Время</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in order_list %}
+            {% if not order.is_closed %}
+            <tr>
+                <td><a href="{% url 'tcsystem:order-detail' order.id %}">{{ order.title }}</a></td>
+                <td>{{ order.author.userprofile }}</td>
+                <td>Действует</td>
+                <td>{{ order.date|date:'d-b H:i' }}</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+            {% for order in order_list %}
+            {% if order.is_closed %}
+            <tr>
+                <td><a href="{% url 'tcsystem:order-detail' order.id %}">{{ order.title }}</a></td>
+                <td>{{ order.author.userprofile }}</td>
+                <td>Закрыто</td>
+                <td>{{ order.date|date:'d-b H:i' }}</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>Нет доступных распоряжений</p>
+{% endif %}
+{% endblock %}

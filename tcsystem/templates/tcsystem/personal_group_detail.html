@@ -1,0 +1,16 @@
+{% extends "tcsystem/body.html" %}
+
+{% block title %}Группы{% endblock %}
+
+{% block content %}
+
+<h4>{{ personalgroup.title }}</h4>
+<hr>
+<h5>Члены группы</h5>
+<ul class="list-unstyled">
+{% for member in personalgroup.members.all %}
+	<li><a href="{% url 'tcsystem:user-detail' member.id %}">{{ member.userprofile }}</a></li>
+{% endfor %}
+</ul>
+
+{% endblock %}

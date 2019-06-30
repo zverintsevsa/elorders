@@ -1,0 +1,25 @@
+{% extends "tcsystem/body.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Группы{% endblock %}
+
+{% block content %}
+
+<form action="{% url 'tcsystem:personal-group-create' %}" method="post">
+    {% csrf_token %}
+    
+    <div class="row">
+
+        <div class="col-9">
+            <h4>Создание группы</h4>       
+        </div>
+
+        <div class="col-3 d-flex justify-content-end">
+            <button class="btn btn-success btn-sm" type="submit">Создать</button>
+        </div>
+        
+    </div>
+    {{ form.title|as_crispy_field }}
+    {{ form.members|as_crispy_field }}
+</form>
+{% endblock %}

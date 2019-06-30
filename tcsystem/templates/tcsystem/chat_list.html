@@ -1,0 +1,18 @@
+{% extends "tcsystem/body.html" %}
+
+{% block title %}Сообщения{% endblock %}
+
+{% block content %}
+<h4>Сообщения</h4>
+{% if chat_list %}
+    <ul class="list-unstyled">
+    {% for chat in chat_list %}
+        <li><a href="{% url 'tcsystem:chat' chat.id %}">
+        {% if chat.first_user == request.user %}{{ chat.second_user.userprofile }}
+    	{% else %}{{ chat.first_user.userprofile }}{% endif %}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Нет доступных сообщений</p>
+{% endif %}
+{% endblock %}

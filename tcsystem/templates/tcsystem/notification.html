@@ -1,0 +1,17 @@
+<div>
+	<p class="text-right">Вы вошли как <a href="{% url 'tcsystem:user-detail' view.request.user.id%}">{{ view.request.user }}</a> <a class="btn btn-light" href="{% url 'tcsystem:logout' %}"><small>Выйти</small></a></p>
+</div>
+
+<div class="card">
+	<div class="card-header">Уведомления</div>
+	<div class="card-body small px-1 mx-1 py-0 my-0">
+		{% for order in order_notifications %}
+		<p class="m-1">{{ order.author.userprofile }}: <a href="{% url 'tcsystem:order-detail' order.id %}">распоряжение</a></p>
+		{% endfor %}
+		<hr>
+		{% for message in message_notifications %}
+		<p class="m-1">{{ message.sender.userprofile }}: <a href="{% url 'tcsystem:chat' message.chat.id %}">сообщение</a></p>
+		{% endfor %}
+	</div>
+
+</div>

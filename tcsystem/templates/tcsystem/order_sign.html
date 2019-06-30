@@ -1,0 +1,50 @@
+{% extends "tcsystem/body.html" %}
+
+{% block title %}Подпись{% endblock %}
+
+{% block content %}
+
+<form action="{% url 'tcsystem:order-sign' view.kwargs.pk %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row">
+
+    	<div class="col-9">
+    		<h4>Подпись</h4> 		
+    	</div>
+
+	    <div class="col-3 d-flex justify-content-end">
+			<button class="btn btn-success btn-sm text-right" type="submit">Подписать</button>
+		</div>
+    	
+    </div>
+    <a href="{% url 'tcsystem:get-hash' view.kwargs.pk %}">Загрузить хеш-файл</a>
+    <p><label for="id_signature">Подписанный файл:</label> <input type="file" name="signature_file" required id="id_signature"></p>
+</form>
+
+<br>
+{% if signature_list %}
+<dl class = "dl-horizontal">
+	<dt>Подписанты</dt>
+	<dd>
+		<table class="table table-sm">
+	        <thead class="thead-light">
+	            <tr>
+	                <th>Имя</th>
+	                <th>Подписано</th>
+	                <th>Дата</th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	            {% for signature in signature_list %}
+	            <tr>
+	                <td>{{ signature.signer.userprofile }}</td>
+	                <td>{% if signature.is_correct %}Да{% else %}Нет{% endif %}</td>
+	                <td>{{ signature.date|date:'d-b H:i' }}</td>
+	            </tr>
+    		    {% endfor %}		
+	        </tbody>
+	    </table>
+	</dd>
+</dl>
+{% endif %}
+{% endblock %}

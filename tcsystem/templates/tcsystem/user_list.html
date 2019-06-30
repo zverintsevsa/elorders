@@ -1,0 +1,16 @@
+{% extends "tcsystem/body.html" %}
+
+{% block title %}Пользователи{% endblock %}
+
+{% block content %}
+<h4>Пользователи</h4>
+{% if user_list %}
+    <ul class="list-unstyled">
+    {% for user in user_list %}
+        <li><a href="{% url 'tcsystem:user-detail' user.id %}">{{ user.userprofile }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No users are available.</p>
+{% endif %}
+{% endblock %}

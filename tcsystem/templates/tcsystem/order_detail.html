@@ -1,0 +1,142 @@
+{% extends "tcsystem/body.html" %}
+
+{% block title %}{{ order.title }}{% endblock %}
+
+{% block content %}
+
+<div class="row">
+	<div class="col-10">
+		<h3>{{ order.title }}</h3>
+	</div>
+
+	<div class="col-2">
+		{% if closable %}
+		<form action="{% url 'tcsystem:order-detail' view.kwargs.pk %}" method="post">
+			{% csrf_token %}
+			<input type="hidden" name="is_closed">
+			<button type="submit" class="btn btn-danger btn-sm">Закрыть</button>
+		</form>
+		{% endif %}
+	</div>
+
+</div>
+
+<dl class = "dl-horizontal">
+	<dt></dt>
+	<dd>{{ order.text }}</dd>
+</dl>
+
+<dl class="row">
+	<dt class="col-2">Автор</dt>
+	<dd class="col-10">{{ order.author.userprofile }}</dd>
+</dl>
+
+<dl class="row">
+	<dt class="col-2">Дата</dt>
+	<dd class="col-10">{{ order.date }}</dd>
+</dl>
+
+<dl class="row">
+	<dt class="col-2">Статус</dt>
+	<dd class="col-10">{% if order.is_closed %}Закрыто{% else %}Действует{% endif %}</dd>
+</dl>
+
+<dl class="row">
+	<dt class="col-2">Номер</dt>
+	<dd class="col-10">{{ order.number }}</dd>
+</dl>
+
+<div class="row">
+	<div class="col-2">
+		{% if is_recipient %}
+		<form action="{% url 'tcsystem:order-detail' view.kwargs.pk %}" method="post">
+			{% csrf_token %}
+			<input type="hidden" name="is_accepted">
+			<button type="submit" class="btn btn-primary">Принято</button>
+		</form>		
+		{% endif %}
+	</div>
+
+	<div class="col-2">
+		{% if is_recipient %}
+			<form action="{% url 'tcsystem:order-detail' view.kwargs.pk %}" method="post">
+			{% csrf_token %}
+			<input type="hidden" name="is_completed">
+			<button type="submit" class="btn btn-primary">Выполнено</button>
+		</form>
+		{% endif %}
+	</div>
+
+	<div class="col-8 d-flex justify-content-end">
+		{% if signable %}
+		<a href="{% url 'tcsystem:order-sign' order.id%}" class="btn btn-link text-right">Подписать</a>
+		{% endif %}
+	</div>
+	
+</div>
+
+<br>
+{% if signature_list %}
+<dl class = "dl-horizontal">
+	<dt>Подписанты</dt>
+	<dd>
+		<table class="table table-sm">
+	        <thead class="thead-light">
+	            <tr>
+	                <th>Имя</th>
+	                <th>Подписано</th>
+	                <th>Дата</th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	            {% for signature in signature_list %}
+	            <tr>
+	                <td>{{ signature.signer.userprofile }}</td>
+	                <td>{% if signature.is_correct %}Да{% else %}Нет{% endif %}</td>
+	                <td>{{ signature.date|date:'d-b H:i' }}</td>
+	            </tr>
+    		    {% endfor %}		
+	        </tbody>
+	    </table>
+	</dd>
+</dl>
+{% endif %}
+{% if recipient_list %}
+<dl class = "dl-horizontal">
+	<dt>Получатели</dt>
+	<dd>
+		<table class="table table-sm">
+	        <thead class="thead-light">
+	            <tr>
+	                <th>Имя</th>
+	                <th>Принял</th>
+	                <th>Выполнил</th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	            {% for recipient in recipient_list %}
+	            <tr>
+	                <td>{{ recipient.user.userprofile }}</td>
+	                <td>{% if recipient.is_accepted %}Да{% else %}Нет{% endif %}</td>
+	                <td>{% if recipient.is_completed %}Да{% else %}Нет{% endif %}</td>
+	            </tr>
+    		    {% endfor %}		
+	        </tbody>
+	    </table>
+	</dd>
+</dl>
+{% endif %}
+
+{% if comment_list %}
+<h4>Комментарии</h4>
+{% for comment in comment_list %}
+	<dl class = "dl-horizontal">
+		<dt>{{ comment.user.userprofile }} <small>{{ comment.date|date:'d-b H:i' }}</small></dt>
+		<dd>{{ comment.text }}</dd>
+	</dl>
+{% endfor %}
+{% endif %}
+
+<a href="{% url 'tcsystem:comment-create' order.id%}" class="btn btn-link text-right">Написать комментарий</a>
+
+{% endblock %}
